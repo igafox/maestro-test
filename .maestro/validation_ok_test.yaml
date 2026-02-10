@@ -1,0 +1,17 @@
+appId: jp.igafox.maestro
+---
+# バリデーション: 15文字ちょうどならエラーなし&挨拶できる
+- launchApp:
+    clearState: true
+
+- tapOn:
+    id: "nameTextField"
+
+- inputText: "123456789012345"
+
+- assertNotVisible: "名前は15文字以内です"
+
+- tapOn:
+    id: "greetButton"
+
+- assertVisible: "Hello, 123456789012345"

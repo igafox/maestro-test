@@ -1,0 +1,18 @@
+appId: jp.igafox.maestro
+---
+# 正常系: 名前を入力してHelloが表示される
+- launchApp:
+    clearState: true
+
+- tapOn:
+    id: "nameTextField"
+
+- inputText: "Taro"
+
+# キーボードが表示されたままだとボタンが隠れてタップできない場合があるため、キーボードを閉じる
+- hideKeyboard
+
+- tapOn:
+    id: "greetButton"
+
+- assertVisible: "Hello, Taro"

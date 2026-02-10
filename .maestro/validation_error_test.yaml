@@ -1,0 +1,12 @@
+appId: jp.igafox.maestro
+---
+# バリデーション: 16文字以上でエラーが表示される
+- launchApp:
+    clearState: true
+
+- tapOn:
+    id: "nameTextField"
+
+- inputText: "1234567890123456"
+
+- assertVisible: "名前は15文字以内です"
