@@ -6,7 +6,7 @@ on:
 
 jobs:
   e2e:
-    runs-on: ubuntu-latest
+    runs-on: macos-14
     timeout-minutes: 30
     steps:
       - name: Checkout
@@ -23,6 +23,8 @@ jobs:
 
       - name: Configure Gradle cache
         uses: gradle/actions/setup-gradle@v4
+        with:
+          cache-read-only: false
 
       - name: Build Debug APK
         run: ./gradlew assembleDebug --stacktrace
@@ -31,14 +33,20 @@ jobs:
         uses: reactivecircus/android-emulator-runner@v2
         with:
           api-level: 34
-          arch: x86_64
+          arch: arm64
           target: google_apis
           profile: pixel_5
-          emulator-options: -no-window -no-snapshot -noaudio -no-boot-anim -gpu swiftshader_indirect
+          avd-name: maestro-avd
+          force-avd-creation: true
+          emulator-boot-timeout: 900000
+          emulator-options: -no-window -no-snapshot -noaudio -no-boot-anim
           disable-animations: true
           script: |
             curl -Ls "https://get.maestro.mobile.dev" | bash
             export PATH="$HOME/.maestro/bin:$PATH"
+            # 念のため boot 完了を確認
+            adb wait-for-device
+            until [[ "$(adb shell getprop sys.boot_completed | tr -d '\r')" == "1" ]]; do echo "waiting for boot..."; sleep 2; done
             adb install -r app/build/outputs/apk/debug/app-debug.apk
             maestro --version
             maestro test .maestro --format junit --output maestro-results --continue-on-failure
