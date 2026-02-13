@@ -50,9 +50,6 @@ jobs:
           script: |
             curl -Ls "https://get.maestro.mobile.dev" | bash
             export PATH="$HOME/.maestro/bin:$PATH"
-            # 念のため boot 完了を確認
-            adb wait-for-device
-            until [[ "$(adb shell getprop sys.boot_completed | tr -d '\r')" == "1" ]]; do echo "waiting for boot..."; sleep 2; done
             adb install -r app/build/outputs/apk/debug/app-debug.apk
             maestro --version
             maestro test .maestro --format junit --output maestro-results --continue-on-failure
